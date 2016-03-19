@@ -1,60 +1,66 @@
 /******************************************************
- ** FILE: CEmployee.h
+ ** FILE: Employee.h
  **
  ** ABSTRACT:
- ** design and implementation of CEmployee class.
+ ** design and implementation of Employee class.
  **
  **
- ** AUTHOR: Ezekiel Zandbergen, Matthew Eaton
+ ** AUTHOR: Ezekiel Zandbergen, Matthew Eaton, Cynthia Obia
  **
  ** CREATION DATE: 1-27-16
  **
  *******************************************************/
 
-#ifndef _CEMPLOYEE_H
-#define _CEMPLOYEE_H
+#ifndef EMPLOYEE_H
+#define EMPLOYEE_H
 #include <string>
 #include <algorithm>
-#include<iostream>
+#include <iostream>
+#include "Visitor.h"
+#include "Unit.h"
 using namespace std;
-class CEmployee{
+class Employee: public Unit{
 protected:
     string m_firstName;
     string m_lastName;
     unsigned int m_hiringYear;
     unsigned int m_salary;
+    unsigned int m_id;
+    
 public:
     // default constructor
-    CEmployee() {
+    Employee() {
         m_firstName = "";
         m_lastName = "";
         m_hiringYear = 0;
         m_salary = 0;
+        m_id = 0;
     }
-    CEmployee(const string &first, const string &last, const unsigned int &sal, const unsigned int &yr){
+    Employee(const string &first, const string &last, const unsigned int &sal, const unsigned int &yr, const unsigned int &id){
         m_firstName = first;
         m_lastName = last;
         m_hiringYear = yr;
         m_salary = sal;
+        m_id = id;
     }
-    CEmployee(const CEmployee &emp) {
+    Employee(const Employee &emp) {
         m_firstName = emp.m_firstName;
         m_lastName = emp.m_lastName;
         m_hiringYear = emp.m_hiringYear;
         m_salary = emp.m_salary;
+        m_id = emp.m_id;
     }
-    virtual ~CEmployee() {
+    virtual ~Employee() {
         m_firstName.~string();
         m_lastName.~string();
-        //m_hiringYear.~unsigned(); // might not work, check
-        //m_salary.~unsigned();
     }
     // copy and swap
-    CEmployee& operator=(CEmployee emp) {
+    Employee& operator=(Employee emp) {
         swap(m_firstName, emp.m_firstName);
         swap(m_lastName, emp.m_lastName);
         swap(m_hiringYear, emp.m_hiringYear);
         swap(m_salary, emp.m_salary);
+        swap(m_id, emp.m_id);
         return *this;
     }
     void setFirstName(const string &name) {
@@ -69,6 +75,9 @@ public:
     void setSal(const unsigned int &sal) {
         m_salary = sal;
     }
+    void setID(const unsigned int &id) {
+        m_id = id;
+    }
     string getFirstName() const{
         return m_firstName;
     }
@@ -81,8 +90,14 @@ public:
     unsigned int getSal() const{
         return m_salary;
     }
+    unsigned int getID() const{
+        return m_id;
+    }
     virtual void DisplayEmployee() const{
-        cout << getFirstName() << " " << getLastName() << "  " << "Salary:" << getSal() << "  Hiring year:" << getYear() << endl;
+        cout << getFirstName() << " " << getLastName() << "; " << getSal() << "; " << getYear() << "; " << getID() << endl;
+    }
+    virtual void Accept(Visitor* v){
+        v->VisitEmployee(this);
     }
 };
 
